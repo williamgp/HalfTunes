@@ -48,3 +48,15 @@ extension SearchViewController: URLSessionDownloadDelegate {
   }
   
 }
+
+extension SearchViewController: URLSessionDelegate {
+  func urlSessionDidFinishEvents(forBackgroundURLSession session: URLSession) {
+    DispatchQueue.main.async {
+      if let appDelegate = UIApplication.shared.delegate as? AppDelegate,
+        let completionHandler = appDelegate.backgroundSessionCompletionHandler {
+        appDelegate.backgroundSessionCompletionHandler = nil
+        completionHandler()
+      }
+    }
+  }
+}
